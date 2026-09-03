@@ -1,0 +1,34 @@
+// lib/crypto/hash.ts
+import { createHash } from 'crypto'
+
+/**
+ * Genera un hash SHA-3 de 256 bits a partir de un objeto o string.
+ * @param data - Objeto o string a hashear
+ * @returns Hash en formato hexadecimal con prefijo 0x
+ */
+export function generarHash(data: any): string {
+  // Si es objeto, convertirlo a string JSON
+  const texto = typeof data === 'string' ? data : JSON.stringify(data)
+  
+  const hash = createHash('sha3-256')
+  hash.update(texto, 'utf-8')
+  return '0x' + hash.digest('hex').toUpperCase()
+}
+
+/**
+ * Genera el hash de una decisión completa
+ */
+export function generarHashDecision(
+  verdict: string,
+  firma: string,
+  rondas: { ronda1: string; ronda2: string; ronda3: string },
+  timestamp: string
+): string {
+  const data = {
+    verdict,
+    firma,
+    rondas,
+    timestamp
+  }
+  return generarHash(data)
+}
